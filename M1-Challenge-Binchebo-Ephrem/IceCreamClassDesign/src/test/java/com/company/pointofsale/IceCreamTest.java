@@ -1,5 +1,6 @@
 package com.company.pointofsale;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
@@ -7,10 +8,16 @@ import java.util.Date;
 import static org.junit.Assert.*;
 
 public class IceCreamTest {
+    private com.company.pointofsale.IceCream iceCreamAtPointOfSale;
+    com.company.factory.IceCream iceCreamAtFactory;
+    @Before
+    public void setUp(){
+        iceCreamAtPointOfSale = new IceCream();
+        iceCreamAtFactory = new com.company.factory.IceCream();
+    }
     @Test
     public void shouldCalculateTheTotalPriceOfIceCreamAtPointOfSaleIncludingServiceFeeAndTax(){
         //Arrange
-        com.company.pointofsale.IceCream iceCreamAtPointOfSale = new IceCream();
         iceCreamAtPointOfSale.setPrice(4.0);
         double expectedValue = 4.92;
         //Act
@@ -26,7 +33,7 @@ public class IceCreamTest {
         assertEquals(expectedValue, actualValue, 0.001);
 
         iceCreamAtPointOfSale.setPrice(3.50);
-        expectedValue = 6.545;
+        expectedValue = 4.515;
         //Act
         actualValue = iceCreamAtPointOfSale.calculateTheTotalPriceAtPointOfSale("DC");
         //Assert
@@ -35,7 +42,6 @@ public class IceCreamTest {
     @Test
     public void shouldReturnZeroTotalPriceAtPointOfSaleForNonPricedIceCream(){
         //Arrange
-        com.company.pointofsale.IceCream iceCreamAtPointOfSale = new IceCream();
         double expectedValue = 0.0;
         //Act
         double actualValue = iceCreamAtPointOfSale.calculateTheTotalPriceAtPointOfSale("CA");
@@ -51,7 +57,6 @@ public class IceCreamTest {
 
     @Test
     public void shouldCalculateTheTotalPriceOfIceCreamAtPointOfSaleWhenServiceFeeAndTAXZero(){
-        com.company.pointofsale.IceCream iceCreamAtPointOfSale = new IceCream();
         iceCreamAtPointOfSale.setPrice(4.0);
         double expectedValue = 4.0;
         //Act
@@ -62,8 +67,7 @@ public class IceCreamTest {
     @Test
     public void shouldReturnTrueIfTheIceCreamAtPointOfSaleDateExpired(){
         //Arrange
-        com.company.pointofsale.IceCream iceCreamAtPointOfSale = new IceCream();
-        com.company.factory.IceCream iceCreamAtFactory = new com.company.factory.IceCream();
+        iceCreamAtPointOfSale.setFlavor("Chockolate");
         iceCreamAtFactory.setProductionTime(new Date(122,07,01));
         iceCreamAtPointOfSale.setSalesTime(new Date(122,07,8));
         boolean expectedValue = true;
@@ -83,8 +87,7 @@ public class IceCreamTest {
     @Test
     public void shouldReturnFalseIfTheIceCreamAtPointOfSaleDateNotExpired(){
         //Arrange
-        com.company.pointofsale.IceCream iceCreamAtPointOfSale = new IceCream();
-        com.company.factory.IceCream iceCreamAtFactory = new com.company.factory.IceCream();
+        iceCreamAtPointOfSale.setFlavor("Vanilla");
         iceCreamAtFactory.setProductionTime(new Date(122,07,01));
         iceCreamAtPointOfSale.setSalesTime(new Date(122,07,4));
         boolean expectedValue = false;
@@ -106,8 +109,6 @@ public class IceCreamTest {
       @Test
       public void shouldCalculateGrossProfitFromSaleOfIceCreamAtPointOfSale(){
         //Arrange
-          com.company.pointofsale.IceCream iceCreamAtPointOfSale = new IceCream();
-          com.company.factory.IceCream iceCreamAtFactory = new com.company.factory.IceCream();
           iceCreamAtFactory.setProductionCost(3.0);
           iceCreamAtPointOfSale.setPrice(5.0);
           double expectedValue = 3.45;
@@ -137,8 +138,6 @@ public class IceCreamTest {
       @Test
       public void shouldCalculateGrossProfitForIceCreamAtPontOfSaleAndReturnZeroForNonPricedIceCream(){
           //Arrange
-          com.company.pointofsale.IceCream iceCreamAtPointOfSale = new IceCream();
-          com.company.factory.IceCream iceCreamAtFactory = new com.company.factory.IceCream();
           iceCreamAtFactory.setProductionCost(3.0);
           double expectedValue = 0.00;
 

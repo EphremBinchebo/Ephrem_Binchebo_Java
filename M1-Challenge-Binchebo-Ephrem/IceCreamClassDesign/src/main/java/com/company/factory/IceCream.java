@@ -3,6 +3,7 @@ package com.company.factory;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class IceCream {
     private String flavor;
@@ -24,6 +25,36 @@ public class IceCream {
 
     public IceCream() {
     }
+
+    public void listAllIngredients(){
+        Scanner scan =new Scanner(System.in);
+        System.out.println("Please enter name of Flavour: ");
+       String flavor1 = scan.nextLine();
+        if(flavor1.equals(this.flavor)) {
+            System.out.println("The Ingredients Used for production of " + flavor1 + " are: ");
+            for (int i = 0; i < ingredients.length; i++) {
+                String flavor2 = ingredients[i];
+                System.out.println(flavor2);
+            }
+
+        }else {
+            System.out.println("Sorry This flavor is not in the list Please enter y to continue\n" +
+                    " or exit to Stop!");
+           flavor1 = scan.nextLine();
+           if(flavor1.equals("exit")){
+                System.out.println("Thank you! Have a good day.");
+            }else if(flavor1.equals("y")){
+                listAllIngredients();
+            }else {
+               System.out.println("Try again!");
+            }
+
+        }
+
+    }
+
+
+
     // Getter and setter methods
     public String getFlavor() {
         return flavor;

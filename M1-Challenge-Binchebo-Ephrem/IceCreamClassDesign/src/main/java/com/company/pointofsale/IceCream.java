@@ -90,7 +90,7 @@ public class IceCream {
             System.out.println("This " + this.getFlavor() + " is " + " expired");
             this.expired = true;
         }else{
-            System.out.println("This" + this.getFlavor() + " is not expired " + (expirationDays-5) + " days left." );
+            System.out.println("This " + this.getFlavor() + " is not expired " + (5 - expirationDays) + " days left." );
             this.expired =false;
         }
         return this.expired;
@@ -176,7 +176,6 @@ public class IceCream {
     }
 
     //to String method
-
     @Override
     public String toString() {
         return "IceCream{" +
