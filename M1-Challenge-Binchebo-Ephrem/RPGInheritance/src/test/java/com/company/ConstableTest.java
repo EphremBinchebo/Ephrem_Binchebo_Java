@@ -35,15 +35,6 @@ public class ConstableTest {
         actualValue = farmerCharacter.getHealth();
         //Assert
         assertEquals(expectedValue, actualValue);
-
-        constableCharacter.setAttackPower(4);
-        farmerCharacter.setAttackPower(4);
-        expectedValue = farmerCharacter.getHealth();
-        // Act
-        constableCharacter.attack(farmerCharacter);
-        actualValue = farmerCharacter.getHealth();
-        //Assert
-        assertEquals(expectedValue, actualValue);
     }
     @Test
     public void shouldAttackAnotherCharacterWithOutCrushingHisHealthWhenHisAttackingPowerIsGreaterZero(){
