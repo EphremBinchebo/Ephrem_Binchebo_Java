@@ -17,12 +17,7 @@ public class MonthController {
     public Month getMonthByMonthNumber(@PathVariable int monthNumber) {
         return monthService.getMonthByMonthNumber(monthNumber);
     }
-    //Another Method for testing purpose
-//    @GetMapping("/{monthNumber}")
-//    public Response getMonthByMonthNumberTest(@PathVariable int monthNumber) {
-//        Month month = monthService.getMonthByMonthNumber(monthNumber);
-//        return new Response("record counts :", Boolean.TRUE);
-//    }
+
     @GetMapping("/randomNumber")
     public Month getMonthByRandomNumber() {
         return monthService.getMonthByRandomNumber();

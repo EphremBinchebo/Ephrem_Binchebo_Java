@@ -1,0 +1,156 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  /math/subtract:
+    post:
+      tags:
+        - math-solution-controller
+      operationId: createSubtractMathSolution
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MathSolution'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Response'
+  /math/multiply:
+    post:
+      tags:
+        - math-solution-controller
+      operationId: createMultiplyMathSolution
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MathSolution'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Response'
+  /math/divide:
+    post:
+      tags:
+        - math-solution-controller
+      operationId: createDivideMathSolution
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MathSolution'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Response'
+  /math/add:
+    post:
+      tags:
+        - math-solution-controller
+      operationId: createAddMathSolution
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MathSolution'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Response'
+  /month/{monthNumber}:
+    get:
+      tags:
+        - month-controller
+      operationId: getMonthByMonthNumber
+      parameters:
+        - name: monthNumber
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Month'
+  /month/randomNumber:
+    get:
+      tags:
+        - month-controller
+      operationId: getMonthByRandomNumber
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Month'
+  /math:
+    get:
+      tags:
+        - math-solution-controller
+      operationId: getAllMathSolution
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MathSolution'
+components:
+  schemas:
+    MathSolution:
+      type: object
+      properties:
+        operan1:
+          type: integer
+          format: int32
+        operan2:
+          type: integer
+          format: int32
+        operation:
+          type: string
+        answer:
+          type: integer
+          format: int32
+    Response:
+      type: object
+      properties:
+        message:
+          type: string
+        status:
+          type: boolean
+    Month:
+      type: object
+      properties:
+        number:
+          type: integer
+          format: int32
+        name:
+          type: string

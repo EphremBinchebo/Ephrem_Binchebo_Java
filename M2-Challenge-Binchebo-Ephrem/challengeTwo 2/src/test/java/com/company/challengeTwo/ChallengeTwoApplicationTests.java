@@ -2,6 +2,7 @@ package com.company.challengeTwo;
 import com.company.challengeTwo.model.MathSolution;
 import com.company.challengeTwo.model.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,34 @@ public class ChallengeTwoApplicationTests {
 	@Before
 	public void setUp(){
 		mockMvc=MockMvcBuilders.webAppContextSetup(context).build();
+	}
+
+
+	@Test
+	public void shouldReturnTheNameOfGivenMonthForValidRequest() throws Exception{
+		mockMvc.perform(get("/month/1")
+				.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.number", Matchers.is(1)))
+				.andExpect(jsonPath("$.name", Matchers.is("January")))
+		        .andExpect(jsonPath("$.*", Matchers.hasSize(2)));
+
+		mockMvc.perform(get("/month/4")
+						.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.number", Matchers.is(4)))
+				.andExpect(jsonPath("$.name", Matchers.is("April")))
+				.andExpect(jsonPath("$.*", Matchers.hasSize(2)));
+
+	}
+	@Test
+	public void shouldReturnTheNameOfRandomMonthForValidRequest() throws Exception {
+		mockMvc.perform(get("/month/randomNumber")
+						.accept(MediaType.APPLICATION_JSON_VALUE))
+				.andExpect(status().isOk())
+			//	.andExpect(jsonPath("$.number", Matchers.contains(Integer)))
+			//	.andExpect(jsonPath("$.name", Matchers.is("April")))
+				.andExpect(jsonPath("$.*", Matchers.hasSize(2)));
 	}
 	@Test
 	public void checkAddMathSolutionTestForValidRequest() throws Exception{

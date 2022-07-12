@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.Double.NaN;
+
 @Service
 public class MathSolutionService {
     private List<MathSolution> mathSolutionList = new ArrayList<>(Arrays.asList(
@@ -19,12 +21,13 @@ public class MathSolutionService {
     }
 
     public Response addMathSolution(MathSolution mathSolution) {
-        if (mathSolution.getOperation().equals("add")) {
+        if (mathSolution.getOperation().equals("add") && !((double)mathSolution.getOperan1() == NaN) && !((double)mathSolution.getOperan1() == NaN)){
             mathSolution.setOperation("add");
             int ans = mathSolution.getOperan1() + mathSolution.getOperan2();
             mathSolution.setAnswer(ans);
             mathSolutionList.add(mathSolution);
-            return new Response("The result of two operand: " + mathSolution.getAnswer(), Boolean.TRUE);
+            return new Response("The result of two operand: " + mathSolution.getAnswer()
+                    +", & total size: " + mathSolutionList.size(), Boolean.TRUE);
         } else {
             return new Response("InvalidRequest: ", Boolean.FALSE);
         }
@@ -36,7 +39,8 @@ public class MathSolutionService {
             int ans = mathSolution.getOperan1() - mathSolution.getOperan2();
             mathSolution.setAnswer(ans);
             mathSolutionList.add(mathSolution);
-            return new Response("The result of two operand: " + mathSolution.getAnswer(), Boolean.TRUE);
+            return new Response("The result of two operand: " + mathSolution.getAnswer()
+                    +", & total size: " + mathSolutionList.size(), Boolean.TRUE);
         } else {
             return new Response("InvalidRequest: ", Boolean.FALSE);
         }
@@ -48,7 +52,8 @@ public class MathSolutionService {
             int ans = mathSolution.getOperan1() * mathSolution.getOperan2();
             mathSolution.setAnswer(ans);
             mathSolutionList.add(mathSolution);
-            return new Response("The result of two operand: " + mathSolution.getAnswer(), Boolean.TRUE);
+            return new Response("The result of two operand: " + mathSolution.getAnswer()
+                    +", & total size: " + mathSolutionList.size(), Boolean.TRUE);
         } else {
             return new Response("InvalidRequest: ", Boolean.FALSE);
         }
@@ -59,7 +64,8 @@ public class MathSolutionService {
             int ans = mathSolution.getOperan1() / mathSolution.getOperan2();
             mathSolution.setAnswer(ans);
             mathSolutionList.add(mathSolution);
-            return new Response("The result of two operand: " + mathSolution.getAnswer(), Boolean.TRUE);
+            return new Response("The result of two operand: " + mathSolution.getAnswer()
+                    +", & total size: " + mathSolutionList.size(), Boolean.TRUE);
         } else {
             return new Response("InvalidRequest: ", Boolean.FALSE);
         }

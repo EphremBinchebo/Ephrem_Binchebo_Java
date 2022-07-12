@@ -26,15 +26,18 @@ public class MonthService {
     ));
 
     public Month getMonthByMonthNumber( int num) {
-        Month month = monthList.stream()
-                .filter(m -> m.getNumber() == (num))
-                .findFirst()
-                .orElse(null);
-        return month;
+        if (num >= 1 || num <= 12) {
+            Month month = monthList.stream()
+                    .filter(m -> m.getNumber() == (num))
+                    .findFirst()
+                    .orElse(null);
+            return month;
+        } else {
+            return null;
+        }
     }
-
     public Month getMonthByRandomNumber() {
-        int number2 = (int)(Math.random() * 10);
+        int number2 = (int)(Math.random() * 12 + 1);
         Month month2 = monthList.get(1);
         for (int i = 0; i < monthList.size(); i++) {
             if(i==number2) {
