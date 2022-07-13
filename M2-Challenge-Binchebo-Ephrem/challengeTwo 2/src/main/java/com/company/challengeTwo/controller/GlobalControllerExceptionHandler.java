@@ -20,7 +20,7 @@ public class GlobalControllerExceptionHandler {
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public ResponseEntity<CustomErrorResponse> outOfRangeException(IllegalArgumentException e) {
+    public ResponseEntity<CustomErrorResponse> handleOutOfRangeException(IllegalArgumentException e) {
         CustomErrorResponse error = new CustomErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.toString(), e.getMessage());
         error.setTimestamp(LocalDateTime.now());
         error.setStatus(HttpStatus.UNPROCESSABLE_ENTITY.value());
