@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-
+/** For this Custom ErrorResponse Class I Used Class Solved Exercises As A Reference **/
 public class CustomErrorResponse {
     private String errorMessage;
     private int status;
