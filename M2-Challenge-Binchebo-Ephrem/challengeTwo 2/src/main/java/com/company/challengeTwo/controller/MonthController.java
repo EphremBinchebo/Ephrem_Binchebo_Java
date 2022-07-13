@@ -1,7 +1,6 @@
 package com.company.challengeTwo.controller;
 
 import com.company.challengeTwo.model.Month;
-import com.company.challengeTwo.model.Response;
 import com.company.challengeTwo.service.MonthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +14,14 @@ public class MonthController {
     private MonthService monthService;
     @GetMapping("/{monthNumber}")
     public Month getMonthByMonthNumber(@PathVariable int monthNumber) {
-        return monthService.getMonthByMonthNumber(monthNumber);
+        if(monthNumber < 1 || monthNumber >= 12){
+            throw new IllegalArgumentException("Input must be between 1 and 12");
+        }else {
+            return monthService.getMonthByMonthNumber(monthNumber);
+        }
     }
 
-    @GetMapping("/randomNumber")
+    @GetMapping("/randomMonth")
     public Month getMonthByRandomNumber() {
         return monthService.getMonthByRandomNumber();
     }

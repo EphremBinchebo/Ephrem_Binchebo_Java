@@ -1,9 +1,6 @@
 package com.company.challengeTwo;
 import com.company.challengeTwo.model.MathSolution;
-import com.company.challengeTwo.model.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,9 +9,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,175 +28,227 @@ public class ChallengeTwoApplicationTests {
 	@Autowired
 	private WebApplicationContext context;
 	ObjectMapper objectMapper = new ObjectMapper();
+
 	@Before
-	public void setUp(){
-		mockMvc=MockMvcBuilders.webAppContextSetup(context).build();
+	public void setUp() {
+		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+	}
+
+	@Test
+	public void checkAddMathSolutionTestForAValidRequest() throws Exception {
+		MathSolution mathSolution = new MathSolution(25, 55);
+		mathSolution.setAnswer(80);
+		mathSolution.setOperation("add");
+
+		String outputJson = objectMapper.writeValueAsString(mathSolution);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/add")
+						.content(outputJson)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isCreated())
+				.andExpect(content().json(outputJson));
+	}
+
+	@Test
+	public void missingOperandReqNonInt442ErrorForAddMathSolution() throws Exception {
+		Map<String, String> MathSolution = new HashMap<>();
+		MathSolution.put("operan1", "44");
+
+
+		String inputAdd = objectMapper.writeValueAsString(MathSolution);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/add")
+						.content(inputAdd)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	public void AddOperandReqNonInt442Error() throws Exception {
+		Map<String, String> map = new HashMap<>();
+		map.put("operan1", "688");
+		map.put("operan2", "mmm");
+
+		String inputJson = objectMapper.writeValueAsString(map);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/add")
+						.content(inputJson)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isUnprocessableEntity());
 	}
 
 
 	@Test
-	public void shouldReturnTheNameOfGivenMonthForValidRequest() throws Exception{
-		mockMvc.perform(get("/month/1")
-				.accept(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.number", Matchers.is(1)))
-				.andExpect(jsonPath("$.name", Matchers.is("January")))
-		        .andExpect(jsonPath("$.*", Matchers.hasSize(2)));
+	public void checkSubtractMathSolutionTestForAValidRequest() throws Exception {
+		MathSolution mathSolution = new MathSolution(25, 55);
+		mathSolution.setAnswer(-30);
+		mathSolution.setOperation("subtract");
 
-		mockMvc.perform(get("/month/4")
-						.accept(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.number", Matchers.is(4)))
-				.andExpect(jsonPath("$.name", Matchers.is("April")))
-				.andExpect(jsonPath("$.*", Matchers.hasSize(2)));
+		String outputJson = objectMapper.writeValueAsString(mathSolution);
 
-	}
-	@Test
-	public void shouldReturnTheNameOfRandomMonthForValidRequest() throws Exception {
-		mockMvc.perform(get("/month/randomNumber")
-						.accept(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk())
-			//	.andExpect(jsonPath("$.number", Matchers.contains(Integer)))
-			//	.andExpect(jsonPath("$.name", Matchers.is("April")))
-				.andExpect(jsonPath("$.*", Matchers.hasSize(2)));
-	}
-	@Test
-	public void checkAddMathSolutionTestForValidRequest() throws Exception{
-		MathSolution math = new MathSolution();
-		math.setOperan1(5);
-		math.setOperan2(6);
-		math.setOperation("add");
-
-
-		String JsonRequest = objectMapper.writeValueAsString(math);
-		MvcResult result = mockMvc.perform(post("/math/add").content(JsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk()).andReturn();
-		String resultContext = result.getResponse().getContentAsString();
-		Response response = objectMapper.readValue(resultContext, Response.class);
-		Assert.assertTrue(response.isStatus() == Boolean.TRUE);
-	}
-	@Test
-	public void checkAddMathSolutionTestForInvalidRequest() throws Exception{
-		MathSolution math = new MathSolution();
-		math.setOperan1(8);
-		math.setOperan2(7);
-		math.setOperation("xx");
-
-
-		String JsonRequest = objectMapper.writeValueAsString(math);
-		MvcResult result = mockMvc.perform(post("/math/add").content(JsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk()).andReturn();
-		String resultContext = result.getResponse().getContentAsString();
-		Response response = objectMapper.readValue(resultContext, Response.class);
-		Assert.assertTrue(response.isStatus() == Boolean.FALSE);
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/subtract")
+						.content(outputJson)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isCreated())
+				.andExpect(content().json(outputJson));
 	}
 
 	@Test
-	public void checkSubtractMathSolutionTestForValidRequest() throws Exception{
-		MathSolution math = new MathSolution();
-		math.setOperan1(33);
-		math.setOperan2(76);
-		math.setOperation("subtract");
+	public void subtractOperandReqNonInt442Error() throws Exception {
+		Map<String, String> map = new HashMap<>();
+		map.put("operan1", "456");
+		map.put("operan2", "uyu");
 
+		String inputJson = objectMapper.writeValueAsString(map);
 
-		String JsonRequest = objectMapper.writeValueAsString(math);
-		MvcResult result = mockMvc.perform(post("/math/subtract").content(JsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk()).andReturn();
-		String resultContext = result.getResponse().getContentAsString();
-		Response response = objectMapper.readValue(resultContext, Response.class);
-		Assert.assertTrue(response.isStatus() == Boolean.TRUE);
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/subtract")
+						.content(inputJson)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isUnprocessableEntity());
 	}
 
 	@Test
-	public void checkSubtractMathSolutionTestForInValidRequest() throws Exception{
-		MathSolution math = new MathSolution();
-		math.setOperan1(60);
-		math.setOperan2(78);
-		math.setOperation("fxs");
+	public void missingOperandReqNonInt442ErrorForSubtractMathSolution() throws Exception {
+		Map<String, String> MathSolution = new HashMap<>();
+		MathSolution.put("operan1", "44");
 
 
-		String JsonRequest = objectMapper.writeValueAsString(math);
-		MvcResult result = mockMvc.perform(post("/math/subtract").content(JsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk()).andReturn();
-		String resultContext = result.getResponse().getContentAsString();
-		Response response = objectMapper.readValue(resultContext, Response.class);
-		Assert.assertTrue(response.isStatus() == Boolean.FALSE);
-	}
-	@Test
-	public void checkMultiplyMathSolutionTestForValidRequest() throws Exception{
-		MathSolution math = new MathSolution();
-		math.setOperan1(8);
-		math.setOperan2(45);
-		math.setOperation("multiply");
+		String inputAdd = objectMapper.writeValueAsString(MathSolution);
 
-
-		String JsonRequest = objectMapper.writeValueAsString(math);
-		MvcResult result = mockMvc.perform(post("/math/multiply").content(JsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk()).andReturn();
-		String resultContext = result.getResponse().getContentAsString();
-		Response response = objectMapper.readValue(resultContext, Response.class);
-		Assert.assertTrue(response.isStatus() == Boolean.TRUE);
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/add")
+						.content(inputAdd)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().is4xxClientError());
 	}
 
 	@Test
-	public void checkMultiplyMathSolutionTestForInValidRequest() throws Exception{
-		MathSolution math = new MathSolution();
-		math.setOperan1(8);
-		math.setOperan2(45);
-		math.setOperation("mul");
+	public void checkMultiplyMathSolutionTestForAValidRequest() throws Exception {
+		MathSolution mathSolution = new MathSolution(20, 25);
+		mathSolution.setAnswer(500);
+		mathSolution.setOperation("multiply");
 
+		String outputJson = objectMapper.writeValueAsString(mathSolution);
 
-		String JsonRequest = objectMapper.writeValueAsString(math);
-		MvcResult result = mockMvc.perform(post("/math/multiply").content(JsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk()).andReturn();
-		String resultContext = result.getResponse().getContentAsString();
-		Response response = objectMapper.readValue(resultContext, Response.class);
-		Assert.assertTrue(response.isStatus() == Boolean.FALSE);
-	}
-	@Test
-	public void checkDivideMathSolutionTestForValidRequest() throws Exception{
-		MathSolution math = new MathSolution();
-		math.setOperan1(5);
-		math.setOperan2(6);
-		math.setOperation("divide");
-
-
-		String JsonRequest = objectMapper.writeValueAsString(math);
-		MvcResult result = mockMvc.perform(post("/math/divide").content(JsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk()).andReturn();
-		String resultContext = result.getResponse().getContentAsString();
-		Response response = objectMapper.readValue(resultContext, Response.class);
-		Assert.assertTrue(response.isStatus() == Boolean.TRUE);
-	}
-	@Test
-	public void checkDivideMathSolutionTestForInValidRequest() throws Exception{
-		MathSolution math = new MathSolution();
-		math.setOperan1(5);
-		math.setOperan2(0);
-		math.setOperation("divide");
-
-
-		String JsonRequest = objectMapper.writeValueAsString(math);
-		MvcResult result = mockMvc.perform(post("/math/divide").content(JsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk()).andReturn();
-		String resultContext = result.getResponse().getContentAsString();
-		Response response = objectMapper.readValue(resultContext, Response.class);
-		Assert.assertTrue(response.isStatus() == Boolean.FALSE);
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/multiply")
+						.content(outputJson)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isCreated())
+				.andExpect(content().json(outputJson));
 	}
 
 	@Test
-	public void checkDivideMathSolutionTestForDividedByZero() throws Exception{
-		MathSolution math = new MathSolution();
-		math.setOperan1(5);
-		math.setOperan2(0);
-		math.setOperation("divide");
+	public void missingOperandReqNonInt442ErrorForMultiplyMathSolution() throws Exception {
+		Map<String, String> MathSolution = new HashMap<>();
+		MathSolution.put("operan1", "44");
 
 
-		String JsonRequest = objectMapper.writeValueAsString(math);
-		MvcResult result = mockMvc.perform(post("/math/divide").content(JsonRequest).contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(status().isOk()).andReturn();
-		String resultContext = result.getResponse().getContentAsString();
-		Response response = objectMapper.readValue(resultContext, Response.class);
-		Assert.assertTrue(response.isStatus() == Boolean.FALSE);
+		String inputAdd = objectMapper.writeValueAsString(MathSolution);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/multiply")
+						.content(inputAdd)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	public void multiplyOperandReqNonInt442Error() throws Exception {
+		Map<String, String> map = new HashMap<>();
+		map.put("operan1", "444");
+		map.put("operan2", "uyu");
+
+		String inputJson = objectMapper.writeValueAsString(map);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/multiply")
+						.content(inputJson)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isUnprocessableEntity());
+	}
+
+	@Test
+	public void checkDivideMathSolutionTestForAValidRequest() throws Exception {
+		MathSolution mathSolution = new MathSolution(40, 20);
+		mathSolution.setAnswer(2);
+		mathSolution.setOperation("divide");
+
+		String outputJson = objectMapper.writeValueAsString(mathSolution);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/divide")
+						.content(outputJson)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isCreated())
+				.andExpect(content().json(outputJson));
+	}
+
+	@Test
+	public void divideOperandReqNonInt442Error() throws Exception {
+		Map<String, String> map = new HashMap<>();
+		map.put("operan1", "hhh");
+		map.put("operan2", "888");
+
+		String inputJson = objectMapper.writeValueAsString(map);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/divide")
+						.content(inputJson)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isUnprocessableEntity());
+	}
+
+	@Test
+	public void missingOperandReqNonInt442ErrorForDivideMathSolution() throws Exception {
+		Map<String, String> MathSolution = new HashMap<>();
+		MathSolution.put("operan1", "44");
+
+
+		String inputAdd = objectMapper.writeValueAsString(MathSolution);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/add")
+						.content(inputAdd)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	public void divideByZeroReqNonInt442Error() throws Exception {
+		MathSolution mathSolution = new MathSolution(40, 0);
+
+
+		String outputJson = objectMapper.writeValueAsString(mathSolution);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/math/divide")
+						.content(outputJson)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andDo(print())
+				.andExpect(status().isUnprocessableEntity());
+	}
+	@Test
+	public void checkMonthForAValidRequest() throws Exception {
+
+		mockMvc.perform(get("/month/567"))
+				.andDo(print())
+				.andExpect(status().isUnprocessableEntity());
+
+	}
+
+
+	@Test
+	public void monthNotReturned404Error() throws Exception {
+
+		mockMvc.perform(get("/month/567"))
+				.andDo(print())
+				.andExpect(status().isUnprocessableEntity());
+
 	}
 }
+

@@ -1,12 +1,14 @@
 package com.company.challengeTwo.controller;
 
 import com.company.challengeTwo.model.MathSolution;
-import com.company.challengeTwo.model.Response;
 import com.company.challengeTwo.service.MathSolutionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+
 @RestController
 @RequestMapping(value = "/math")
 public class MathSolutionController {
@@ -20,19 +22,24 @@ public class MathSolutionController {
     }
 
     @PostMapping("/add")
-    public Response createAddMathSolution(@RequestBody MathSolution mathSolution) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public @Valid MathSolution createAddMathSolution(@RequestBody @Valid MathSolution mathSolution) {
         return mathSolutionService.addMathSolution(mathSolution);
+
     }
     @PostMapping("/subtract")
-    public Response createSubtractMathSolution(@RequestBody MathSolution mathSolution){
+    @ResponseStatus(HttpStatus.CREATED)
+    public @Valid MathSolution  createSubtractMathSolution(@RequestBody MathSolution mathSolution){
         return mathSolutionService.subtractMathSolution(mathSolution);
     }
     @PostMapping("/multiply")
-    public Response createMultiplyMathSolution(@RequestBody MathSolution mathSolution){
+    @ResponseStatus(HttpStatus.CREATED)
+    public  MathSolution  createMultiplyMathSolution(@RequestBody MathSolution mathSolution){
         return mathSolutionService.multiplyMathSolution(mathSolution);
     }
     @PostMapping("/divide")
-    public Response createDivideMathSolution(@RequestBody MathSolution mathSolution){
+    @ResponseStatus(HttpStatus.CREATED)
+    public @Valid MathSolution createDivideMathSolution(@RequestBody MathSolution mathSolution){
         return mathSolutionService.divideMathSolution(mathSolution);
     }
 }
